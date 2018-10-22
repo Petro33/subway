@@ -39,11 +39,30 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Order Meal', 'url' => ['/meal/user-meal']],
-            ['label' => 'Meal List', 'url' => ['/meal/index']],
-            ['label' => 'Meal Status', 'url' => ['/mealstatus/update', 'id' => 1],'visible' => User::isAdmin(),],
-            ['label' => 'Users', 'url' => ['/user/index'],'visible' => User::isAdmin(),],
+            [
+                'label' => 'Home',
+                'url' => ['/site/index']
+            ],
+            [
+                'label' => 'Order Meal',
+                'url' => ['/meal/user-meal'],
+                'visible' => !Yii::$app->user->isGuest,
+            ],
+            [
+                'label' => 'Meal List',
+                'url' => ['/meal/index'],
+                'visible' => !Yii::$app->user->isGuest,
+            ],
+            [
+                'label' => 'Meal Status',
+                'url' => ['/mealstatus/update', 'id' => 1],
+                'visible' => User::isAdmin(),
+            ],
+            [
+                'label' => 'Users',
+                'url' => ['/user/index'],
+                'visible' => User::isAdmin(),
+            ],
             [
                 'class' => 'bootstrap.widgets.TbMenu',
                 'label' => 'Meal Settings',

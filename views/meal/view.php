@@ -32,15 +32,42 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'bread_id',
-            'bread_size_id',
-            'baked_type_id',
-            'taste_sandwich_id',
-            'extras_id',
-            'vegetables_id',
-            'sauce_id',
-            'user_id',
-            'rate_id',
+            [
+                'label' => 'Bread',
+                'value' => $model->bread->name
+            ],
+            [
+                'label' => 'Bread Size',
+                'value' => $model->breadSize->name
+            ],
+            [
+                'label' => 'Baked Type',
+                'value' => $model->bakedType->name
+            ],
+            [
+                'label' => 'Taste Sandwich',
+                'value' => $model->tasteSandwich->name
+            ],
+            [
+                'label' => 'Extras',
+                'value' => $model->extras->name
+            ],
+            [
+                'label' => 'Bread',
+                'value' => $model->bread->name
+            ],
+            [
+                'label' => 'Vegetables',
+                'value' => $model->vegetables->name
+            ],
+            [
+                'label' => 'Sauce',
+                'value' => $model->sauce->name
+            ],
+            [
+                'label' => 'Rate',
+                'value' => $model->rate->name
+            ],
         ],
     ]) ?>
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 19, 2018 at 12:32 PM
+-- Generation Time: Oct 22, 2018 at 11:18 AM
 -- Server version: 5.7.23-0ubuntu0.16.04.1
 -- PHP Version: 7.1.23-2+ubuntu16.04.1+deb.sury.org+1
 
@@ -134,27 +134,11 @@ INSERT INTO `meal` (`id`, `name`, `bread_id`, `bread_size_id`, `baked_type_id`, 
 (7, 'Meal 7', 1, 1, 1, 1, 1, 1, 1, 2, 1, '2018-10-17', '2018-10-19 03:19:38'),
 (8, 'meal 8-13', 2, 1, 1, 1, 1, 1, 1, 1, 1, '2018-10-18', '2018-10-19 03:39:33'),
 (9, 'meal 8-14', 2, 1, 1, 1, 1, 1, 1, 1, 1, '2018-10-19', '2018-10-19 06:23:14'),
-(10, 'Meal 111', 1, 1, 1, 1, 1, NULL, 1, 2, 2, '2018-10-19', '2018-10-19 09:23:18');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `meal_has_vegetables`
---
-
-CREATE TABLE `meal_has_vegetables` (
-  `id` int(11) NOT NULL,
-  `meal_id` int(11) NOT NULL,
-  `vegetables_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `meal_has_vegetables`
---
-
-INSERT INTO `meal_has_vegetables` (`id`, `meal_id`, `vegetables_id`) VALUES
-(1, 9, 3),
-(2, 9, 2);
+(10, 'Meal 111', 1, 1, 1, 1, 1, 3, 1, 2, 2, '2018-10-19', '2018-10-19 09:23:18'),
+(11, 'Meal 10', 2, 1, 1, 1, 1, 1, 1, 1, 1, NULL, '2018-10-22 06:34:58'),
+(12, 'Meal 12', 1, 1, 1, 1, 1, 1, 1, 1, 3, '2018-10-22', '2018-10-22 07:45:04'),
+(13, 'Meal 13', 1, 1, 1, 1, 1, 1, 1, 1, 1, '2018-10-22', '2018-10-22 07:45:35'),
+(14, 'meal 14', 3, 2, 2, 3, 3, 4, 3, 2, 2, '2018-10-22', '2018-10-22 08:17:22');
 
 -- --------------------------------------------------------
 
@@ -325,13 +309,8 @@ ALTER TABLE `meal`
   ADD KEY `fk_meal_vegetables1_idx` (`vegetables_id`),
   ADD KEY `fk_meal_sauce1_idx` (`sauce_id`),
   ADD KEY `fk_meal_users1_idx` (`user_id`),
-  ADD KEY `fk_meal_rate1_idx` (`rate_id`);
-
---
--- Indexes for table `meal_has_vegetables`
---
-ALTER TABLE `meal_has_vegetables`
-  ADD PRIMARY KEY (`id`);
+  ADD KEY `fk_meal_rate1_idx` (`rate_id`),
+  ADD KEY `bread_id` (`bread_id`,`bread_size_id`,`baked_type_id`,`taste_sandwich_id`,`extras_id`,`vegetables_id`,`sauce_id`,`user_id`,`rate_id`);
 
 --
 -- Indexes for table `meal_status`
@@ -399,12 +378,7 @@ ALTER TABLE `extras`
 -- AUTO_INCREMENT for table `meal`
 --
 ALTER TABLE `meal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
---
--- AUTO_INCREMENT for table `meal_has_vegetables`
---
-ALTER TABLE `meal_has_vegetables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `meal_status`
 --
@@ -429,12 +403,30 @@ ALTER TABLE `taste_sandwich`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `vegetables`
 --
 ALTER TABLE `vegetables`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `meal`
+--
+ALTER TABLE `meal`
+  ADD CONSTRAINT `fk_meal_baked_type1` FOREIGN KEY (`baked_type_id`) REFERENCES `baked_type` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_meal_bread1` FOREIGN KEY (`bread_id`) REFERENCES `bread` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_meal_bread_size1` FOREIGN KEY (`bread_size_id`) REFERENCES `bread_size` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_meal_extras1` FOREIGN KEY (`extras_id`) REFERENCES `extras` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_meal_rates1` FOREIGN KEY (`rate_id`) REFERENCES `rate` (`id`),
+  ADD CONSTRAINT `fk_meal_sauce1` FOREIGN KEY (`sauce_id`) REFERENCES `sauce` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_meal_taste_sandwich1` FOREIGN KEY (`taste_sandwich_id`) REFERENCES `taste_sandwich` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_meal_users1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_meal_vegetables1` FOREIGN KEY (`vegetables_id`) REFERENCES `vegetables` (`id`) ON UPDATE CASCADE;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

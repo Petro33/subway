@@ -8,6 +8,8 @@ use app\models\RateSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\models\User;
 
 /**
  * RateController implements the CRUD actions for Rate model.
@@ -24,6 +26,25 @@ class RateController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view', 'create','update', 'delete', 'userMeal'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'userMeal'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => [ 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return User::isAdmin();
+                        }
+                    ],
                 ],
             ],
         ];

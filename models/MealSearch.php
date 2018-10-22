@@ -19,7 +19,7 @@ class MealSearch extends Meal
     {
         return [
             [['id', 'bread_id', 'bread_size_id', 'baked_type_id', 'taste_sandwich_id', 'extras_id', 'vegetables_id', 'sauce_id', 'user_id', 'rate_id'], 'integer'],
-            [['name'], 'safe'],
+            [['name', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -69,6 +69,8 @@ class MealSearch extends Meal
             'sauce_id' => $this->sauce_id,
             'user_id' => $this->user_id,
             'rate_id' => $this->rate_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);

@@ -12,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
+
 /**
  * MealController implements the CRUD actions for Meal model.
  */
@@ -31,10 +32,10 @@ class MealController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['update', 'delete'],
+                'only' => ['index', 'view', 'create','update', 'delete', 'userMeal'],
                 'rules' => [
                     [
-                        'actions' => ['update'],
+                        'actions' => ['index', 'view', 'create', 'update', 'userMeal'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -52,12 +53,52 @@ class MealController extends Controller
     }
 
     /**
+     * Creates a new Meal model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionUserMeal()
+    {
+        $model = Meal::findOne(['user_id' => Yii::$app->user->id, 'created_at' => date('Y-m-d') ]);
+
+        if(!$model){
+            $oldMeal = Meal::find()->where(['user_id' => Yii::$app->user->id, 'id' => Meal::find()->max('id')])->one();
+            if($oldMeal){
+                $model = new Meal();
+                $model->setAttributes($oldMeal->getAttributes());
+            }
+        }
+
+        if(!$model) {
+            $model = new Meal();
+        }
+
+        $model->created_at = date('Y-m-d');
+
+        if(!User::isAdmin()){
+            $model->user_id = Yii::$app->user->id;
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Meal updated!');
+        }
+        if(MealStatus::getMealStatus() == MealStatus::STATUS_CLOSE){
+            Yii::$app->session->setFlash('error', 'Time for order meal expired!');
+        }
+
+        return $this->render('userMeal', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
      * Lists all Meal models.
      * @return mixed
      */
     public function actionIndex()
     {
         $searchModel = new MealSearch();
+
         if(!User::isAdmin()){
             $searchModel->user_id = Yii::$app->user->id;
         }
@@ -98,45 +139,6 @@ class MealController extends Controller
         }
 
         return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Creates a new Meal model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionUserMeal()
-    {
-        $model = Meal::findOne(['user_id' => Yii::$app->user->id, 'created_at' => date('Y-m-d') ]);
-
-        if(!$model){
-            $oldMeal = Meal::find()->where(['user_id' => Yii::$app->user->id, 'id' => Meal::find()->max('id')])->one();
-            if($oldMeal){
-                $model = new Meal();
-                $model->setAttributes($oldMeal->getAttributes());
-            }
-        }
-
-        if(!$model) {
-            $model = new Meal();
-        }
-
-        $model->created_at = date('Y-m-d');
-
-        if(!User::isAdmin()){
-            $model->user_id = Yii::$app->user->id;
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Meal updated!');
-        }
-        if(MealStatus::getMealStatus() == MealStatus::STATUS_CLOSE){
-            Yii::$app->session->setFlash('error', 'Time for order meal expired!');
-        }
-
-        return $this->render('userMeal', [
             'model' => $model,
         ]);
     }
